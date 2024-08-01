@@ -143,8 +143,8 @@ def encode_block(block):
     Returns a string containing packed compressed ima adpcm block.
     Only 1010 bytes size linear mono 16 bit fragment supported."""
     if len(block) != 1010:
-        raise ValueError('Unsupported sample quantity in block. Should be 505.')
-        return
+        #raise ValueError('Unsupported sample quantity in block. Should be 505.')
+        return b''
 
     result = _calc_head(block[0:2])
 
@@ -165,27 +165,25 @@ def decode_block(block):
     Returns a string containing packed uncompressed linear pcm values.
     Only 256 bytes compressed block size supported."""
     if len(block) != 256:
-        raise ValueError('Unsupported block size. Should be 256.')
-        return
+        #raise ValueError('Unsupported block size. Should be 256.')
+        return b''
 
     global _decoder_predicted
     global _decoder_index
     global _decoder_step
 
-    result = ''
+    result = b''
     _decoder_predicted = struct.unpack('h', block[0:2])[0]
     _decoder_index = struct.unpack('B', block[2:3])[0]
     _decoder_step = t_step[_decoder_index]
     result += block[0:2]
-
     for i in range(4, len(block)):
-        original_sample = struct.unpack('B', block[i])[0]
+        original_sample = struct.unpack('B', block[i].to_bytes())[0]
         second_sample = original_sample >> 4
         first_sample = (second_sample << 4) ^ original_sample
         result += struct.pack('h', _decode_sample(first_sample))
         result += struct.pack('h', _decode_sample(second_sample))
 
     return result
-
 
 __all__ = ["encode_block", "decode_block"]
