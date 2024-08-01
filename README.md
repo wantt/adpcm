@@ -1,4 +1,8 @@
-# pyima
+# pyima 
+## Usage
+```bash
+python main.py
+``` 
 This python module implements an audio codec IMA ADPCM suitable for use in
 games or other audio applications. It support 256 bytes compressed blocks
 with 505 4-bit samples at sample rate 8 KHz mono and 1010 bytes uncompressed
